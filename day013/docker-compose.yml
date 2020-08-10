@@ -1,5 +1,5 @@
 version: "3"
-servise:
+services:
   resistry:
     container_name: registry
     image: registry:2.6
