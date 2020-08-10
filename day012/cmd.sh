@@ -54,3 +54,15 @@ docker container exec -it mysql mysql -u root -p volume_test
 # select table
 #mysql>
 select * from user;
+
+# archiv DataVolume coutainer
+docker container run -v `${PWD}`:/tmp \
+--volume-from mysql-data \
+busybox \
+tar cvzf /tmp/mysql-backup.tar.gz /var/lib/mysql
+
+# error
+#tar cvzf /tmp/mysql-backup.tar.gz /var/lib/mysql
+#zsh: permission denied: /{PWD}
+#unknown flag: --volume-from
+#See 'docker container run --help'.
