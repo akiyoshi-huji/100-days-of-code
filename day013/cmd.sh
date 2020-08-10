@@ -54,3 +54,38 @@ docker image tag example/echo:latest localhost:5000/example/echo:latest
 
 # push docker image to docker registry
 docker image push localhost:5000/example/echo:latest
+
+# pull image from registry
+docker container exec -it worker01 docker image pull registry:5000/example/echo:latest
+
+# services
+docker container exec -it manager \
+docker service create --replicas 1 --publish 8000:8000 --name echo registry:5000/example/echo:latest
+
+# list service
+docker container exec -it manager docker service ls
+#ID                  NAME                MODE                REPLICAS            IMAGE                               PORTS
+#fwdq1qyjce42        echo                replicated          1/1                 registry:5000/example/echo:latest   *:8000->8000/tcp
+
+# scale out
+docker container exec -it manager docker service scale echo=6
+#echo scaled to 6
+#overall progress: 6 out of 6 tasks
+#1/6: running
+#2/6: running
+#3/6: running
+#4/6: running
+#5/6: running
+#6/6: running
+
+# show service container
+docker container exec -it manager docker service ps echo | grep Running
+#ti18y9qhnkfj        echo.1              registry:5000/example/echo:latest   4cdc78a4054a        Running             Running 9 minutes ago
+#e530mtombigs        echo.2              registry:5000/example/echo:latest   fbc24576bc8c        Running             Running 5 minutes ago
+#hy2vsirbdgz1        echo.3              registry:5000/example/echo:latest   16c4b97fdcab        Running             Running 6 minutes ago
+#lm5uywb3jntk        echo.4              registry:5000/example/echo:latest   1dec7f09c3b5        Running             Running 6 minutes ago
+#5kr06we19blq        echo.5              registry:5000/example/echo:latest   1dec7f09c3b5        Running             Running 6 minutes ago
+#6iixvvt0q27k        echo.6              registry:5000/example/echo:latest   4cdc78a4054a        Running             Running 7 minutes ago
+
+# remove services
+docker container exec -it manager docker service rm echo
