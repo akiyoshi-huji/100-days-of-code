@@ -1,7 +1,7 @@
 func data(price:Double)->Void {
+    price * 17
     print(price)
 }
 
-data(price: 100)
-data(price: 100.00)
-data(price: 100.001)
+data(price: 28)
+
